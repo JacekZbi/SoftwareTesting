@@ -1,2 +1,2 @@
 # SoftwareTesting
-SoftwareTesting based on https://parabank.parasoft.com website
+Software Testing portfolio based on https://parabank.parasoft.com website
