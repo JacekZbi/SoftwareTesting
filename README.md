@@ -1,2 +1,34 @@
-# SoftwareTesting
-Software Testing portfolio based on https://parabank.parasoft.com website
+# Hello I am experienced QA & Development Support Specialist 
+
+I have 10 years of experience in **Game Development QA, Development Support, and Data/Pipeline Testing for 3D art workflows in Houdini and NVIDIA Omniverse**. 
+
+My experience includes performing Integration testing, System testing, Interface testing, Regression Testing (Manual), Smoke Tests and Acceptance Testing as development support before software was handed to a client and then to users. I have experience in Non-Functional tests, such as, Compatibility testing across different devices and configurations, performance testing on different hardware, providing feedback after performing Usability testing and designing UI myself for titles ported to new platform.
+
+---
+
+## Tools
+
+| Category | Tools |
+| :--- | :--- |
+| **QA** | Manual Testing, Functional Testing, Compliance & Compatibility Testing, Smoke Checks |
+| **API & Database** | Postman, SQL |
+| **Project management** | Jira, Confluence |
+| **Technical** | Python (Basic Scripting), USD Workflow (Houdini Solaris, NVIDIA Omniverse) |
+| **Platforms** | Multi-platform compliance (Xbox, PlayStation, Nintendo Switch) |
+
+
+---
+
+##  QA Projects
+
+
+*  **[Test Suite](#)** - WIP
+*  **[API Testing](#)** - WIP
+*  **[SQL](#)** - WIP
+
+
+---
+
+##  Connect 
+
+*  **LinkedIn:** www.linkedin.com/in/jacek-żbikowski-3585ba165
