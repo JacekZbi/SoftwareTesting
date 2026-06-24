@@ -1,0 +1,391 @@
+{
+  "info": {
+    "_postman_id": "6dacd187-00d9-4e21-94e2-0c987804f54e",
+    "name": "ParaBank E2E Banking & Investment Workflow",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "55692407",
+    "_collection_link": "https://go.postman.co/collection/55692407-6dacd187-00d9-4e21-94e2-0c987804f54e?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Login",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const xml2js = require('xml2js');\r",
+              "\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response time is less than 200ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});\r",
+              "\r",
+              "pm.test(\"Response contains user data\", function () {\r",
+              "    const responseJson = xml2js.parseString(pm.response.text(), function (err, result) {\r",
+              "        \r",
+              "        \r",
+              "      const customer = result.customer;\r",
+              "        \r",
+              "    \r",
+              "        pm.expect(customer).to.have.property('id');\r",
+              "        pm.expect(customer).to.have.property('firstName');\r",
+              "        pm.expect(customer).to.have.property('lastName');\r",
+              "\r",
+              "    \r",
+              "        const customerId = customer.id[0]; \r",
+              "        pm.expect(customerId).to.not.be.undefined;\r",
+              "        \r",
+              "        pm.environment.set(\"customerId\", customerId);\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BaseURL}}/services/bank/login/{{login}}/{{password}}",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "services",
+            "bank",
+            "login",
+            "{{login}}",
+            "{{password}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Account information",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const xml2js = require('xml2js');\r",
+              "pm.test(\"Response time is less than 200ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});\r",
+              "pm.test(\"Account with the highest balance\", function () {\r",
+              "    xml2js.parseString(pm.response.text(), function (err, result) {\r",
+              "        pm.expect(err).to.be.null;\r",
+              "\r",
+              "        const accountsList = result.accounts.account;\r",
+              "        \r",
+              "\r",
+              "        const firstAccount = accountsList[0];\r",
+              "        const firstAccountId = firstAccount.id[0];\r",
+              "        pm.environment.set(\"firstAccountId\", firstAccountId);\r",
+              "        console.log(\"First Account ID:\", firstAccountId);\r",
+              "\r",
+              "\r",
+              "      \r",
+              "        let highestBalance = -100000000000;\r",
+              "        let highestBalanceAccountId = null;\r",
+              "\r",
+              "        accountsList.forEach(function(account) {\r",
+              "            const currentBalance = parseFloat(account.balance[0]);\r",
+              "            const currentAccountId = account.id[0];\r",
+              "\r",
+              "            if (currentBalance > highestBalance) {\r",
+              "                highestBalance = currentBalance;\r",
+              "                highestBalanceAccountId = currentAccountId;\r",
+              "            }\r",
+              "        });\r",
+              "\r",
+              "        console.log(`Highest Balance found: $${highestBalance} in Account ID: ${highestBalanceAccountId}`);\r",
+              "        pm.expect(highestBalanceAccountId).to.not.be.null;\r",
+              "\r",
+              "     \r",
+              "        pm.environment.set(\"highestBalanceAccountId\", highestBalanceAccountId);\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURL}}/services/bank/customers/{{customerId}}/accounts",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "services",
+            "bank",
+            "customers",
+            "{{customerId}}",
+            "accounts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Deposit",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"Response time is less than 200ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURL}}/services/bank/deposit?accountId={{firstAccountId}}&amount=10000.00",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "services",
+            "bank",
+            "deposit"
+          ],
+          "query": [
+            {
+              "key": "accountId",
+              "value": "{{firstAccountId}}"
+            },
+            {
+              "key": "amount",
+              "value": "10000.00"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Verify Balance",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const xml2js = require('xml2js');\r",
+              "\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"Response time is less than 200ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});\r",
+              "xml2js.parseString(pm.response.text(), function (err, result) {\r",
+              "        pm.expect(err).to.be.null;\r",
+              "\r",
+              "        const account = result.account;\r",
+              "        const currentBalance = parseFloat(account.balance[0]);\r",
+              "\r",
+              "    \r",
+              "        pm.expect(currentBalance).to.be.a('number');\r",
+              "        \r",
+              "\r",
+              "\r",
+              "});\r",
+              "\r",
+              "// Parabnk is site for testing purposes hence previous deposit is not visible."
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURL}}/services/bank/accounts/{{firstAccountId}}",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "services",
+            "bank",
+            "accounts",
+            "{{firstAccountId}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get positions",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "const xml2js = require('xml2js');\r",
+              "\r",
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"Response time is less than 200ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});\r",
+              "pm.test(\"Retrieve tickers and set environment variable\", function () {\r",
+              "    xml2js.parseString(pm.response.text(), function (err, result) {\r",
+              "\r",
+              "    \r",
+              "        const positions = result.positions.position;\r",
+              "        pm.expect(positions).to.be.an('array').and.not.be.empty;\r",
+              "\r",
+              "    \r",
+              "        const ticker = positions[0].symbol[0];\r",
+              "        const price = positions[0].purchasePrice[0];\r",
+              "        const Name = positions[0].name[0];\r",
+              "        pm.expect(ticker).to.be.a('string').and.not.be.empty;\r",
+              "        pm.environment.set(\"tickerName\", Name);\r",
+              "\r",
+              "        pm.environment.set(\"tickerPrice\", price);\r",
+              "        pm.environment.set(\"ticker\", ticker);\r",
+              "        console.log(\"Ticker saved successfully:\", ticker, price);\r",
+              "    });\r",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BaseURL}}/services/bank/customers/{{customerId}}/positions",
+          "host": [
+            "{{BaseURL}}"
+          ],
+          "path": [
+            "services",
+            "bank",
+            "customers",
+            "{{customerId}}",
+            "positions"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Buy Position",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {\r",
+              "    pm.response.to.have.status(200);\r",
+              "});\r",
+              "pm.test(\"Response time is less than 200ms\", function () {\r",
+              "    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+              "});\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\npositionId\t{positionId}\r\ncustomerId\t{customerId}\r\nname\tstring\r\nsymbol\tstring\r\nshares\t5\r\npurchasePrice {TickerPrice}\r\n}",
+          "options": {
+            "raw": {
+              "language": "xml"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://parabank.parasoft.com/parabank/services/bank/customers/{{customerId}}/buyPosition?accountId={{highestBalanceAccountId}}&name={{tickerName}}&symbol={{ticker}}&shares=223&pricePerShare={{tickerPrice}}",
+          "protocol": "https",
+          "host": [
+            "parabank",
+            "parasoft",
+            "com"
+          ],
+          "path": [
+            "parabank",
+            "services",
+            "bank",
+            "customers",
+            "{{customerId}}",
+            "buyPosition"
+          ],
+          "query": [
+            {
+              "key": "accountId",
+              "value": "{{highestBalanceAccountId}}"
+            },
+            {
+              "key": "name",
+              "value": "{{tickerName}}"
+            },
+            {
+              "key": "symbol",
+              "value": "{{ticker}}"
+            },
+            {
+              "key": "shares",
+              "value": "223"
+            },
+            {
+              "key": "pricePerShare",
+              "value": "{{tickerPrice}}"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
